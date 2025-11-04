@@ -10,7 +10,7 @@ async function bootstrap() {
       transport: Transport.GRPC,
       options: {
         package: 'task',
-        protoPath: join(__dirname, '../../proto/task.proto'),
+        protoPath: join(__dirname, '../proto/task.proto'),
         url: '0.0.0.0:5002',
         loader: { keepCase: true },
       },

@@ -15,8 +15,8 @@ import { Task } from './entities/task.entity';
         transport: Transport.GRPC,
         options: {
           package: 'user',
-          protoPath: join(__dirname, '../../../proto/user.proto'),
-          url: 'localhost:5001',
+          protoPath: join(__dirname, '../../proto/user.proto'),
+          url: 'user-service:5001',
         },
       },
     ]),

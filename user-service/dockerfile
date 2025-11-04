@@ -1,0 +1,26 @@
+# Etapa de build
+FROM node:24 AS builder
+
+WORKDIR /usr/src/app
+
+# 👇 ahora copiamos los package.json desde su carpeta correcta
+COPY ./user-service/package*.json ./
+
+RUN npm install
+
+# 👇 copiamos el resto del código del user-service
+COPY ./user-service .
+
+# 👇 copiamos los proto desde la raíz
+COPY ./proto ./proto
+
+RUN npm run build
+
+# Etapa final (más liviana)
+FROM node:24-alpine
+
+WORKDIR /usr/src/app
+
+COPY --from=builder /usr/src/app ./
+
+CMD ["npm", "run", "start:prod"]

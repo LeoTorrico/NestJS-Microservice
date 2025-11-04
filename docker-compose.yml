@@ -1,0 +1,100 @@
+services:
+  user-service:
+    build:
+      context: .
+      dockerfile: ./user-service/Dockerfile
+    container_name: user-service
+    restart: always
+    env_file:
+      - ./user-service/.env
+    ports:
+      - "3002:3001"
+      - "5001:5001"
+    depends_on:
+      - postgres-user
+    networks:
+      - microservices-net
+
+  task-service:
+    build:
+      context: .
+      dockerfile: ./task-service/Dockerfile
+    container_name: task-service
+    restart: always
+    env_file:
+      - ./task-service/.env
+    ports:
+      - "3003:3001"
+      - "5002:5002"
+    depends_on:
+      - postgres-task
+    networks:
+      - microservices-net
+
+  gateway:
+    build:
+      context: .
+      dockerfile: ./gateway/Dockerfile
+    container_name: gateway
+    restart: always
+
+    ports:
+      - "3000:3000"
+    depends_on:
+      - user-service
+      - task-service
+    networks:
+      - microservices-net
+
+  postgres-user:
+    image: postgres:13
+    container_name: postgres-user
+    environment:
+      POSTGRES_DB: user_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5440:5432"
+    volumes:
+      - postgres_user_data:/var/lib/postgresql/data
+    networks:
+      - microservices-net
+
+  postgres-task:
+    image: postgres:13
+    container_name: postgres-task
+    environment:
+      POSTGRES_DB: task_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5441:5432"
+    volumes:
+      - postgres_task_data:/var/lib/postgresql/data
+    networks:
+      - microservices-net
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8080:80"
+    depends_on:
+      - postgres-user
+      - postgres-task
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - microservices-net
+
+volumes:
+  postgres_user_data:
+  postgres_task_data:
+  pgadmin_data:
+
+networks:
+  microservices-net:
+    driver: bridge

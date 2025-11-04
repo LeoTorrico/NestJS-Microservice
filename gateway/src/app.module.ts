@@ -12,8 +12,8 @@ import { TasksHttpController } from './modules/tasks/tasks.http.controller';
         transport: Transport.GRPC,
         options: {
           package: 'user',
-          protoPath: join(__dirname, '../../proto/user.proto'),
-          url: '0.0.0.0:5001',
+          protoPath: join(__dirname, '../proto/user.proto'),
+          url: 'user-service:5001',
           loader: { keepCase: true },
         },
       },
@@ -22,8 +22,8 @@ import { TasksHttpController } from './modules/tasks/tasks.http.controller';
         transport: Transport.GRPC,
         options: {
           package: 'task',
-          protoPath: join(__dirname, '../../proto/task.proto'),
-          url: '0.0.0.0:5002',
+          protoPath: join(__dirname, '../proto/task.proto'),
+          url: 'task-service:5002',
           loader: { keepCase: true },
         },
       },

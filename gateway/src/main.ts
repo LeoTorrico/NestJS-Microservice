@@ -14,5 +14,6 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   await app.listen(3000);
+  console.log(`API Gateway is running on port 3000`);
 }
 bootstrap();
